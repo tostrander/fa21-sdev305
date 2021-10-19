@@ -1,0 +1,41 @@
+#address-block {
+    display: none;
+}
+
+.err {
+    color: darkred;
+    display: none;
+}
+
+body {
+    background-color: darkred;
+}
+
+h1 {
+    color: darkgreen;
+}
+
+#main {
+    background-color: white;
+    padding-bottom: 3em;
+}
+
+legend {
+    padding: .5rem;
+    font-size: 2rem;
+    font-weight: 500;
+    color: darkgreen;
+}
+
+fieldset {
+    color: darkgreen;
+}
+
+label {
+    color: black;
+}
+
+.btn-primary {
+    background-color: darkgreen;
+    border-color: darkgreen;
+}

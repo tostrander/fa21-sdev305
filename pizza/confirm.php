@@ -54,30 +54,61 @@
             }
          */
 
+        //Define a constant for sales tax rate
         define("TAX_RATE", 0.065);
-        $price = 10.00 * TAX_RATE;
+        define("TOPPING_PRICE", 0.50);
 
         $fname = $_POST['fname'];
         $lname = $_POST['lname'];
         $method = $_POST['method'];
         $address = nl2br($_POST['address']);
-        $toppings = implode(", ", $_POST['toppings']);
-        $size = $_POST['size'];
 
-        $numToppings = sizeof($_POST['toppings']);
-
-        if ($numToppings <= 1) {
-            $basePrice = 10.00;
-        } else {
-            $basePrice = 15.00;
+        $toppings = "";
+        $numToppings = 0;
+        if (!empty($_POST['toppings']))
+        {
+            $toppings = implode(", ", $_POST['toppings']);
+            $numToppings = sizeof($_POST['toppings']);
         }
 
-        $basePrice = $numToppings <= 1 ? 10.00 : 15.00;
-        echo $numToppings <= 1 ? 10.00 : 15.00;
-        echo "<pre>";
-        //var_dump($_SERVER);
-        echo "</pre>";
+        $size = $_POST['size'];
 
+
+        //Validate form data
+
+
+
+        /* Calculate price of pizza
+         * Base price:
+         * Small - $10.00
+         * Medium - $15.00
+         * Large - $20.00
+         * Toppings - 0.50 each
+         * Sales tax, 0.065
+         */
+        if ($size == "small") {
+            $price = 10.00;
+        } elseif ($size == "medium") {
+            $price = 15.00;
+        } else {
+            $price = 20.00;
+        }
+
+        //Add cost of toppings
+        $price += $numToppings * TOPPING_PRICE;
+
+        //Add sales tax
+        $price += $price * TAX_RATE;
+        $price = number_format($price, 2);
+
+
+        //Send an email to Poppa
+
+
+        //Store the order in a database
+
+
+        //Display order summary for customer, including total price
         echo "<h1>Thank you for your order, $fname!!</h1>";
         echo "<h2>Order Summary</h2>";
         echo "<p>Name: $fname $lname</p>";
@@ -85,6 +116,9 @@
         echo "<p>Address: $address</p>";
         echo "<p>Toppings: $toppings</p>";
         echo "<p>Size: $size</p>";
+        echo "<p>Total Price: $$price</p>";
+
+
     ?>
 
 

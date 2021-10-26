@@ -104,7 +104,7 @@
         //Send an email to Poppa
         $toEmail = "tostrander@greenriver.edu"; //YOUR address here
         $fromName = "Tina";
-        $fromEmail = "tostrander@greenriver.edu";
+        $fromEmail = "poppaspizza@gmail.com";
         $subject = "New Order";
         $headers = "From: $fromName <$fromEmail>";
 
@@ -121,9 +121,34 @@
             echo "<p>There was a problem... Please call us.</p>";
         }
 
+        //Connect to DB
+        $database = "tostrand_sdev305"; //Use YOUR username
+        $password = "(biy?8qN&4xp"; //YOUR password
+        $user = "tostrand_sdev305";
+        $host = "localhost";
+        $cnxn = mysqli_connect($host, $user, $password, $database)
+            or die("Error connecting to database");
 
+        /* Create the pizza table
+         CREATE TABLE pizza (
+            order_id int(4) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            fname VARCHAR(30) NOT NULL,
+            lname VARCHAR(30) NOT NULL,
+            address VARCHAR(50),
+            size VARCHAR(6) NOT NULL,
+            toppings VARCHAR(50),
+            method VARCHAR(10) NOT NULL,
+            price DECIMAL(6, 2) NOT NULL,
+            order_date datetime NOT NULL DEFAULT CURRENT_TIMESTAMP()
+         );
+         INSERT INTO pizza (fname, lname, address, size, toppings, method, price)
+           VALUES ('Joe', 'Shmo', '123 Elm', 'small', 'pepperoni', 'delivery', 10.60);
+        */
 
         //Store the order in a database
+        $sql = "INSERT INTO pizza (fname, lname, address, size, toppings, method, price) 
+           VALUES ('$fname', '$lname', '$address', '$size', '$toppings', '$method', $price)";
+        mysqli_query($cnxn, $sql);
 
 
         //Display order summary for customer, including total price

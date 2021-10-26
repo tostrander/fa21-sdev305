@@ -101,8 +101,26 @@
         $price += $price * TAX_RATE;
         $price = number_format($price, 2);
 
-
         //Send an email to Poppa
+        $toEmail = "tostrander@greenriver.edu"; //YOUR address here
+        $fromName = "Tina";
+        $fromEmail = "tostrander@greenriver.edu";
+        $subject = "New Order";
+        $headers = "From: $fromName <$fromEmail>";
+
+        $message = "A new order has been placed.\n";
+        $message .= "Name: $fname $lname\n";
+        $message .=  "Method: $method\n";
+        $message .=  "Address: $address\n";
+        $message .=  "Toppings: $toppings\n";
+        $message .=  "Size: $size\n";
+        $message .=  "Total Price: $$price";
+
+        $success = mail($toEmail, $subject, $message, $headers);
+        if(!$success) {
+            echo "<p>There was a problem... Please call us.</p>";
+        }
+
 
 
         //Store the order in a database

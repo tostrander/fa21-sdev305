@@ -150,7 +150,6 @@
            VALUES ('$fname', '$lname', '$address', '$size', '$toppings', '$method', $price)";
         mysqli_query($cnxn, $sql);
 
-
         //Display order summary for customer, including total price
         echo "<h1>Thank you for your order, $fname!!</h1>";
         echo "<h2>Order Summary</h2>";
@@ -160,7 +159,6 @@
         echo "<p>Toppings: $toppings</p>";
         echo "<p>Size: $size</p>";
         echo "<p>Total Price: $$price</p>";
-
 
     ?>
 

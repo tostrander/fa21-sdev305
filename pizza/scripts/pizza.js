@@ -1,4 +1,4 @@
-document.getElementById("pizza-form").onsubmit = validate;
+//document.getElementById("pizza-form").onsubmit = validate;
 
 //Display address block when delivery option is selected
 document.getElementById("delivery").onclick = function() {

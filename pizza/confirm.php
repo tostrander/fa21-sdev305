@@ -54,8 +54,30 @@
 
 
         //Validate form data
+        $isValid = true;
 
+        //Validate first name
+        if (empty($fname)) {
+            echo "<p>Please enter a first name.</p>";
+            $isValid = false;
+        }
 
+        //Validate last name
+        if (empty($lname)) {
+            echo "<p>Please enter a last name.</p>";
+            $isValid = false;
+        }
+
+        //Validate method
+        if (! ($method == 'pickup' OR $method == 'delivery')) {
+            echo "<p>Go away, evildoer!</p>";
+            $isValid = false;
+        }
+
+        //Terminate script if data is not valid
+        if (!$isValid) {
+            die("<p>Click back to fix any errors.</p>");
+        }
 
         /* Calculate price of pizza
          * Base price:

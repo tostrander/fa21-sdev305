@@ -2,77 +2,120 @@
     $page = "Order Confirmation";
     include('includes/header.php');
 
-        //Turn on error reporting
-        ini_set('display_errors', 1);
-        error_reporting(E_ALL);
+    //Turn on error reporting
+    ini_set('display_errors', 1);
+    error_reporting(E_ALL);
 
-        /*
-        echo "<pre>";
-        var_dump($_POST);
-        echo "</pre>";
-        */
+/*
+    echo "<pre>";
+    var_dump($_POST);
+    echo "</pre>";
 
-        /*
-         * array(6) {
-              ["fname"]=>string(7) "Jacques"
-              ["lname"]=>string(8) "Cousteau"
-              ["method"]=>string(8) "delivery"
-              ["address"]=>string(55) "32510 108th Avenue SE
-                    Underwater, Atlantis
-                    32423-3242"
-              ["toppings"]=>
-                  array(3) {
-                    [0]=>
-                    string(9) "pepperoni"
-                    [1]=>
-                    string(7) "sausage"
-                    [2]=>
-                    string(6) "olives"
-                  }
-              ["size"]=>string(5) "large"
-            }
-         */
+    array(6) {
+          ["fname"]=>string(7) "Jacques"
+          ["lname"]=>string(8) "Cousteau"
+          ["method"]=>string(8) "delivery"
+          ["address"]=>string(55) "32510 108th Avenue SE
+                Underwater, Atlantis
+                32423-3242"
+          ["toppings"]=>
+              array(3) {
+                [0]=>
+                string(9) "pepperoni"
+                [1]=>
+                string(7) "sausage"
+                [2]=>
+                string(6) "olives"
+              }
+          ["size"]=>string(5) "large"
+        }
+     */
 
         //Define a constant for sales tax rate
         define("TAX_RATE", 0.065);
         define("TOPPING_PRICE", 0.50);
 
-        $fname = $_POST['fname'];
-        $lname = $_POST['lname'];
-        $method = $_POST['method'];
-        $address = nl2br($_POST['address']);
-
-        $toppings = "";
-        $numToppings = 0;
-        if (!empty($_POST['toppings']))
-        {
-            $toppings = implode(", ", $_POST['toppings']);
-            $numToppings = sizeof($_POST['toppings']);
-        }
-
-        $size = $_POST['size'];
-
-
-        //Validate form data
+        // Validate form data
         $isValid = true;
 
-        //Validate first name
-        if (empty($fname)) {
+        // first name
+        $fname = "";
+        if (!empty($_POST['fname'])) {
+            $fname = $_POST['fname'];
+        } else {
             echo "<p>Please enter a first name.</p>";
             $isValid = false;
         }
 
-        //Validate last name
-        if (empty($lname)) {
+        // last name
+        $lname = "";
+        if (!empty($_POST['lname'])) {
+            $lname = $_POST['lname'];
+        } else {
             echo "<p>Please enter a last name.</p>";
             $isValid = false;
         }
 
-        //Validate method
-        if (! ($method == 'pickup' OR $method == 'delivery')) {
-            echo "<p>Go away, evildoer!</p>";
+        // method
+        $method = "";
+        $validOptions = array('pickup', 'delivery');
+        if (isset($_POST['method'])) {
+            if (in_array($_POST['method'], $validOptions)) {
+                $method = $_POST['method'];
+            } else {
+                echo "<p>Go away, evildoer!!</p>";
+                $isValid = false;
+            }
+        } else {
+            echo "<p>Please select pickup or delivery.</p>";
             $isValid = false;
         }
+
+        // address (only required for deliveries)
+        $address = "";
+        if ($method == "delivery") {
+            if (!empty($_POST['address'])) {
+                $address = nl2br($_POST['address']);
+            } else {
+                echo "<p>Please enter an address for delivery.</p>";
+                $isValid = false;
+            }
+        }
+
+        // toppings
+        $toppings = "";
+        $numToppings = 0;
+        $validToppings = array('pepperoni', 'sausage', 'olives', 'mushrooms', 'onions', 'pineapple');
+        if (!empty($_POST['toppings']))
+        {
+            foreach ($_POST['toppings'] as $selectedTopping) {
+
+                //if selected topping is not valid, display an error
+                if (!in_array($selectedTopping, $validToppings)) {
+                    echo "<p>You spoofed me!</p>";
+                    $isValid = false;
+                }
+            }
+
+            $toppings = $isValid ? implode(", ", $_POST['toppings']) : "";
+            $numToppings = sizeof($_POST['toppings']);
+        }
+
+        // size
+        $size = "";
+        $validSizes = array('small', 'medium', 'large');
+        if (isset($_POST['size'])) {
+            if (in_array($_POST['size'], $validSizes)) {
+                $size = $_POST['size'];
+            } else {
+                echo "<p>Invalid size selection.</p>";
+                $isValid = false;
+            }
+        } else {
+            echo "<p>Please select a size.</p>";
+            $isValid = false;
+        }
+
 
         //Terminate script if data is not valid
         if (!$isValid) {
@@ -143,10 +186,35 @@
            VALUES ('Joe', 'Shmo', '123 Elm', 'small', 'pepperoni', 'delivery', 10.60);
         */
 
-        //Store the order in a database
-        $sql = "INSERT INTO pizza (fname, lname, address, size, toppings, method, price) 
-           VALUES ('$fname', '$lname', '$address', '$size', '$toppings', '$method', $price)";
-        mysqli_query($cnxn, $sql);
+        //TODO: This needs to be refactored!
+
+        $formData = array('fname'=>$fname, 'lname'=>$lname, 'address'=>$address,
+            'size'=>$size, 'toppings'=>$toppings, 'method'=>$method, 'price'=>$price);
+        save($formData);
+
+        function save($arr)
+        {
+            global $cnxn;
+
+            //Escape all single and double quotes to prevent SQL injection
+            foreach ($arr as $key=>$value) {
+
+                $arr[$key] = mysqli_real_escape_string($cnxn, $value);
+            }
+
+            //Store the order in a database
+            $sql = "INSERT INTO pizza (fname, lname, address, size, toppings, method, price) 
+            VALUES ('{$arr["fname"]}', 
+                    '{$arr["lname"]}', 
+                    '{$arr["address"]}', 
+                    '{$arr["size"]}', 
+                    '{$arr["toppings"]}', 
+                    '{$arr["method"]}', 
+                    '{$arr["price"]}'
+                   )";
+            //echo $sql;
+            mysqli_query($cnxn, $sql);
+        }
 
         //Display order summary for customer, including total price
         echo "<h1>Thank you for your order, $fname!!</h1>";

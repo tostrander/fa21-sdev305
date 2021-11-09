@@ -14,9 +14,21 @@
     $cnxn = mysqli_connect($host, $user, $password, $database)
             or die("Error connecting to database");
 ?>
+   <h2>Admin Page</h2>
 
-    <h2>Admin Page</h2>
-    <pre>
+    <table id="pizza-orders" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Size</th>
+                <th>Toppings</th>
+                <th>Method</th>
+            </tr>
+        </thead>
+        <tbody>
+
 <?php
     //Display pizza orders
     $sql = "SELECT * FROM pizza ORDER BY order_date DESC";
@@ -42,12 +54,61 @@
         $fname = $row['fname'];
         $lname = $row['lname'];
         $date = date("m/d/Y h:ma", strtotime($row['order_date']));
-        echo "<p>$order_id - $fname $lname, $date</p>";
-    }
+        $size = $row['size'];
+        $toppings = $row['toppings'];
+        $method = $row['method'];
 
+        echo "
+            <tr>
+                <td>$order_id</td>
+                <td>$fname $lname</td>
+                <td>$date</td>
+                <td>$size</td>
+                <td>$toppings</td>
+                <td>$method</td>
+            </tr>";
+    }
 ?>
-    </pre>
+
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Order ID</th>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Size</th>
+                <th>Toppings</th>
+                <th>Method</th>
+            </tr>
+        </tfoot>
+    </table>
+
 </div>
+
+<script src="//code.jquery.com/jquery-3.5.1.js"></script>
+<script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<script>
+    $('#pizza-orders').DataTable(
+        {
+            responsive: true
+        }
+    );
+</script>
 
 </body>
 </html>
+
+<!-- Basic table structure
+<table>
+    <thead>
+
+    </thead>
+    <tbody>
+
+    </tbody>
+    <tfoot>
+
+    </tfoot>
+</table>
+-->

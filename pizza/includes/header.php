@@ -15,6 +15,14 @@
 
     <!--  Favicon  -->
     <link rel="icon" type="image/png" href="images/pizza-favicon.png">
+
+    <!-- Stylesheets -->
+    <?php
+        if ($page == "Admin Page") {
+            echo '<link rel="stylesheet" href="//cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+                  <link rel="stylesheet" href="//cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">';
+        }
+    ?>
 </head>
 <body>
 
@@ -28,3 +36,4 @@
         <!--    <p>Free delivery on orders of $25 or more</p>-->
         <!--    <a class="btn btn-primary btn-lg" href="#" role="button">Order Now!</a>-->
     </div>
+

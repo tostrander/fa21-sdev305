@@ -25,6 +25,7 @@
                 <th>Size</th>
                 <th>Toppings</th>
                 <th>Method</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -53,7 +54,7 @@
         $order_id = $row['order_id'];
         $fname = $row['fname'];
         $lname = $row['lname'];
-        $date = date("m/d/Y h:ma", strtotime($row['order_date']));
+        $date = date("m/d/Y h:ia", strtotime($row['order_date']));
         $size = $row['size'];
         $toppings = $row['toppings'];
         $method = $row['method'];
@@ -66,6 +67,7 @@
                 <td>$size</td>
                 <td>$toppings</td>
                 <td>$method</td>
+                <td><a href='order-details.php?order=$order_id'>view</a></td>
             </tr>";
     }
 ?>
@@ -79,6 +81,7 @@
                 <th>Size</th>
                 <th>Toppings</th>
                 <th>Method</th>
+                <th></th>
             </tr>
         </tfoot>
     </table>

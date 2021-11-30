@@ -50,12 +50,15 @@
         <fieldset class="form-group border p-2">
             <legend>Toppings</legend>
             <div class="form-group">
-                <label><input type="checkbox" value="pepperoni" name="toppings[]"> Pepperoni</label><br>
-                <label><input type="checkbox" value="sausage" name="toppings[]"> Sausage</label><br>
-                <label><input type="checkbox" value="olives" name="toppings[]"> Olives</label><br>
-                <label><input type="checkbox" value="mushrooms" name="toppings[]"> Mushrooms</label><br>
-                <label><input type="checkbox" value="onions" name="toppings[]"> Onions</label><br>
-                <label><input type="checkbox" value="pineapple" name="toppings[]"> Pineapple</label>
+                <?php
+                    require('includes/constants.php');
+                    $toppings = TOPPINGS;
+                    rsort($toppings);
+                    foreach($toppings as $topping) {
+                        echo "<label><input type='checkbox' value='$topping' name='toppings[]'> ".ucfirst($topping)."</label><br>";
+                    }
+                ?>
+
             </div>
         </fieldset>
 
@@ -64,10 +67,13 @@
             <legend>Pizza Size</legend>
             <div class="form-group">
                 <select class="form-control" id="size" name="size">
-                    <option value="none">Select a Size</option>
-                    <option value="small">Small</option>
-                    <option value="medium">Medium</option>
-                    <option value="large">Large</option>
+                    <?php
+                        $sizes = array('none'=>'Select a size', 'small'=>'Small', 'medium'=>'Medium', 'large'=>'Large');
+                        foreach($sizes as $value=>$displayText){
+                            echo "<option value='$value'>$displayText</option>";
+                        }
+                    ?>
+
                 </select>
                 <span class="err" id="err-size">Please select a size</span>
             </div>

@@ -1,16 +1,37 @@
 <?php
-    $page = "Order Confirmation";
-    include('includes/header.php');
 
     //Turn on error reporting
     ini_set('display_errors', 1);
     error_reporting(E_ALL);
 
-/*
+    /*
     echo "<pre>";
-    var_dump($_POST);
+    var_dump($_SERVER);
     echo "</pre>";
+    */
 
+    //Make sure the form has been submitted
+    //if (!isset($_SERVER['http_referer']))
+    if($_SERVER["REQUEST_METHOD"] == "POST")
+    {
+        header("location: https://tostrander.greenriverdev.com/305/pizza/");
+    }
+    //var_dump($_POST);
+
+    //Make sure the request is coming from my website
+    if ($_SERVER['http_referer'] != 'https://tostrander.greenriverdev.com/305/pizza/')
+    {
+        die("Go away, evildoer!");
+    }
+
+    //require($_SERVER['HOME'].'db-config.php');
+
+    $page = "Order Confirmation";
+    include('includes/header.php');
+
+
+
+    /*
     array(6) {
           ["fname"]=>string(7) "Jacques"
           ["lname"]=>string(8) "Cousteau"
@@ -85,13 +106,13 @@
         // toppings
         $toppings = "";
         $numToppings = 0;
-        $validToppings = array('pepperoni', 'sausage', 'olives', 'mushrooms', 'onions', 'pineapple');
+        require('includes/constants.php');
         if (!empty($_POST['toppings']))
         {
             foreach ($_POST['toppings'] as $selectedTopping) {
 
                 //if selected topping is not valid, display an error
-                if (!in_array($selectedTopping, $validToppings)) {
+                if (!in_array($selectedTopping, TOPPINGS)) {
                     echo "<p>You spoofed me!</p>";
                     $isValid = false;
                 }
